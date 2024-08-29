@@ -1,0 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import './normalize.css';
+
+/* Общие стили */
+html, body {
+  height: 100%;
+}
+.page {
+  margin-bottom: 40px;
+  width: 90vw;
+  box-sizing: border-box; 
+  margin: 0 auto;
+  background: #3b3737;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+}
+h2 {
+  font-size: 20px;
+  font-weight: 700;
+  min-height: 50px;
+}
+
+/* Заголовок */
+.header__title {
+  margin: 24px 0 18px; 
+  text-align: center;   
+  font-size: 28px;
+  font-weight: 700;
+}
+
+/* Основная часть */
+.content {
+  height: 80vh;
+  margin: auto;
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: start;
+  gap: 30px;
+}
+
+/* Создание/редактирование книги */
+.create-edit {
+  width: 40%;
+}
+.create-edit__form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.create-edit__form input, select {
+  padding: 12px;
+  background: white;
+  color: #3b3737;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+  font-size: 16px;
+}
+.saveButton {
+  margin-top: 10px;  
+  padding: 12px;
+  border-radius: 5px;
+  border: none;
+  background: white;
+  color: #4d4747;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.5s;
+}
+.saveButton:hover {
+  background: #a3a3a3;
+  color: white;
+}
+
+/* Список категорий и книг */
+.list-container {
+  width: 100%;
+  display: flex;
+  justify-content: start;
+  gap: 20px;
+}
+
+/* Список категорий */
+.category {
+  width: 32%;
+}
+.categoryList, .bookList {
+  list-style: none;
+  padding: 0;
+}
+.categoryList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.categoryList li {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 12px;
+  background: #6f6f6f79;
+  color: white;
+  border-radius: 5px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+.categoryList li.selected {
+  background-color: #a3a3a3;
+}
+.category-list li:hover {
+  background-color: #6f6f6f79;
+  color: white;                
+}
+.bookList {
+  box-sizing: border-box;
+  height: 60vh;
+  padding: 10px;
+  border: #6F6F6F 1px solid;
+  overflow-y: scroll;
+}
+
+/* Список книг */
+.books {
+  flex-grow: 1;
+}
+
+/* Поиск книги */
+.search-input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background: white;
+  color: #3b3737;
+  outline: none;
+  font-size: 16px;
+}
+
+/* Элемент добавленной книги */
+.book-item {
+  width: 100%;
+  height: max-content;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #6F6F6F;
+  box-sizing: border-box;
+  border-radius: 5px;
+  padding: 10px 15px;
+  margin-bottom: 10px;
+  background-color: #6f6f6f79;
+  font-size: 16px;
+}
+.book-item-text {
+  flex-grow: 1;
+}
+.book-item p {
+  color: white;
+}
+.book-category-item__text {
+  color: #6F6F6F;
+  font-size: small;
+}
+.book-item__buttons {
+  width: 15%;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.book-item__delete, .book-item__edit {
+  width: 18px;
+  height: 18px;
+  background-size: 100%;
+  border: none;
+  cursor: pointer;
+}
+
+/* Кнопки редактирования и удаления */
+.book-item__delete {
+  background: url('../images/delete.png') no-repeat center;
+}
+.book-item__edit {
+  background: url('../images/edit.png') no-repeat center;
+}
+
+/* footer */
+.footer__title {
+  font-size: 12px;
+}
+
+#create-title.titleError {
+  background: #c4a8a8; /* Светло-красный фон для визуального выделения */
+}
+
+#create-author.authorError {
+  background: #c4a8a8; /* Светло-красный фон для визуального выделения */
+}
