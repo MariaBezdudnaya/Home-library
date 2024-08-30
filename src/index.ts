@@ -1,6 +1,5 @@
 import { IBook, BookCategory, bookCategories} from './types/index';
 import './styles/styles.css';
-
 import  Collection  from "a-local-database";
 
 const myCollection = new Collection();
@@ -8,9 +7,10 @@ const myCollection = new Collection();
 if (!myCollection.get<IBook[]>('books')) { // Проверка наличия коллекции книг
   myCollection.set({books: []}); // Если коллекции нет, создаем ее и инициализируем пустым массивом
 }
-let books: IBook[] = myCollection.get('books') || [];
 
 let currentEditBook: IBook | null = null; // Переменная для хранения редактируемой книги
+let selectedCategory: BookCategory | null = null; // Переменная для хранения выбранной категории
+let searchQuery: string = ''; // Переменная для хранения поискового запроса
 
 // Получение элементов DOM
 const titleInput = document.querySelector<HTMLInputElement>('.create-title')!;
@@ -44,9 +44,11 @@ function createCategoryOptions() { //элементы опций категор�
     const li = document.createElement('li');
     li.textContent = category;
     li.addEventListener('click', () => {
+      selectedCategory = category; // Сохраняем выбранную категорию
       filterBooksByCategory(category);
       highlightSelectedCategory(category);
       searchInput.value = ''; // Очистить поле поиска
+      searchQuery = ''; // Сбрасываем поисковый запрос
   });
   categoryList.appendChild(li);
 });
@@ -60,12 +62,40 @@ function highlightSelectedCategory(selectedCategory: BookCategory) {
   });
 }
 
-// Функция для удаления подсветки категории
-function removeSelectedCategory() {
-  const categoryItems = categoryList.querySelectorAll('li ');
-  categoryItems.forEach((item) => {
-    item.classList.remove('selected');
+// Функция для обновления списка книг
+function renderBooks(booksToDisplay: IBook[]) {
+  bookList.innerHTML = ''; // Очистить список книг перед отображением
+  booksToDisplay.forEach(book => {
+    const card = createBook(book);
+    bookList.appendChild(card);
   });
+}
+
+// Функция для обновления отображения списка книг
+function updateBookList() {
+  const bookBase = myCollection.get<IBook[]>("books");
+  renderBooks(bookBase);
+}
+
+//Функция для фильтрации книг по категориям
+function filterBooksByCategory(selectedCategory: BookCategory) { 
+  const bookBase = myCollection.get<IBook[]>("books");
+  const filteredBooks = bookBase.filter(book => book.category === selectedCategory);
+  renderBooks(filteredBooks);
+}
+
+// Функция для поиска книг
+function searchBooks() {
+  const searchQuery = searchInput.value.toLowerCase();
+  const bookBase = myCollection.get<IBook[]>("books");
+  const filteredBooks = bookBase.filter(book => 
+    book.title.toLowerCase().includes(searchQuery) || book.author.toLowerCase().includes(searchQuery)
+  );
+  
+  if (selectedCategory) { // Фильтруем по выбранной категории
+    const categoryFilteredBooks = filteredBooks.filter(book => book.category === selectedCategory);
+    renderBooks(categoryFilteredBooks);
+  }
 }
 
 // Функция для создания карточки книги
@@ -89,13 +119,7 @@ function createBook(book: IBook) {
   return card;
 }
 
-myCollection.get<IBook[]>('books')?.forEach((book) => {
-  const card = createBook(book);
-  bookList.prepend(card);
-});
-changeTotal();
-
-// Функция для создания новой книги
+// Функция для добавления новой книги
 function addBook(title: string, author: string, category: BookCategory) {
   const bookBase = myCollection.get<IBook[]>("books");
   const newId = Math.max(0, ...bookBase.map((book) => book.id)) + 1;
@@ -108,14 +132,15 @@ function addBook(title: string, author: string, category: BookCategory) {
 
 // Функция для редактирования книги
 function editBook(card: HTMLLIElement, bookId: number) {
-  const book = books.find((book) => book.id === bookId);
-  if (book) {
-    currentEditBook = book;
-    titleInput.value = book.title;
-    authorInput.value = book.author;
-    categorySelect.value = book.category;
-
-    saveButton.textContent = 'Сохранить изменения';
+  const bookBase = myCollection.get<IBook[]>('books');
+  const book = bookBase?.findIndex(b => b.id === bookId); // находим редактируемую книгу
+  
+  if (book !== undefined) {
+    currentEditBook = bookBase[book]; // сохраняем редактируемую книгу
+    titleInput.value = currentEditBook.title; // заполняем поля ввода
+    authorInput.value = currentEditBook.author;
+    categorySelect.value = currentEditBook.category;
+    saveButton.textContent = 'Сохранить изменения'; // меняем текст кнопки на "Сохранить изменения"
   }
 }
 
@@ -128,50 +153,14 @@ function deleteBook(card: HTMLLIElement, id: number) {
   changeTotal(); // Обновление общего количества книг
 }
 
-//Фильтрация книг по категориям
-function filterBooksByCategory(selectedCategory: BookCategory) { 
-  const bookBase = myCollection.get<IBook[]>("books");
-  const filteredBooks = bookBase.filter(book => book.category === selectedCategory);
-  renderBooks(filteredBooks);
-}
-
-// Функция для поиска книг
-function searchBooks() {
-  const searchTerm = searchInput.value.toLowerCase();
-  const bookBase = myCollection.get<IBook[]>("books");
-  const filteredBooks = bookBase.filter(book => 
-    book.title.toLowerCase().includes(searchTerm) || book.author.toLowerCase().includes(searchTerm)
-  );
-  renderBooks(filteredBooks);
-}
-
-// Функция для отображения списка книг
-function renderBooks(booksToDisplay: IBook[]) {
-  bookList.innerHTML = ''; // Очистить список книг перед отображением
-  booksToDisplay.forEach(book => {
-    const card = createBook(book);
-    bookList.appendChild(card);
-
-    removeSelectedCategory(); // Удалить подсветку категории при отображении всего списка
-  });
-}
-
-createCategoryOptions(); // Создание опции категорий
 
 // Обработчики событий
-searchInput.addEventListener('click', () => { // Добавлен обработчик для отслеживания ввода
-  if (searchInput.value === '') {
-    const bookBase = myCollection.get<IBook[]>("books");
-    renderBooks(bookBase); // Отображать весь список книг, если происходит поиск
-  }
-  removeSelectedCategory(); // Удаление подсветки категории при отображении всего списка
-}); 
-
 searchInput.addEventListener('input', searchBooks);
+
+
 
 saveButton.addEventListener('click', (event) => { // Добавлен обработчик для кнопки сохранения
   event.preventDefault();
-  // saveButton.textContent = 'Добавить книгу'; // Меняем текст кнопки
 
   const title = titleInput.value;
   const author = authorInput.value;
@@ -204,26 +193,46 @@ saveButton.addEventListener('click', (event) => { // Добавлен обраб
     return; // Выход из функции
   }
 
-  // Если ошибок нет, продолжаем обработку формы
+// Если редактируем книгу
   if (currentEditBook) {
-    currentEditBook.title = title;
-    currentEditBook.author = author;
-    currentEditBook.category = category;
-    currentEditBook = null; // Сброс после редактирования
+    const bookBase = myCollection.get<IBook[]>('books');
+    const index = bookBase?.findIndex(b => b.id === currentEditBook.id); // находим индекс редактируемой книги
+
+    // Обновляем данные книги
+    if (index !== -1) {
+      bookBase[index] = { ...bookBase[index], title, author, category }; // обновляем книгу
+    } 
+    myCollection.set({ books: bookBase }); // сохраняем изменения
+    currentEditBook = null; // сбрасываем редактируемую книгу
+    saveButton.textContent = 'Добавить книгу'; // восстанавливаем текст кнопки
+    updateBookList(); 
+    categorySelect.value = selectedCategory; // Восстановить выбранную категорию
+    filterBooksByCategory(selectedCategory); // Фильтруем список книг по этой категории
+    searchInput.value = searchQuery; // Восстановить поисковый запрос
+    
   } else {
+    // Обновляем, если добавляем новую книгу
     addBook(title, author, category);
+    categorySelect.value = selectedCategory; // Восстановить выбранную категорию
+    filterBooksByCategory(selectedCategory); // Фильтруем список книг по этой категории
+    searchInput.value = searchQuery; // Восстановить поисковый запрос
+    
   }
 
   // Очистка полей
   titleInput.value = '';
   authorInput.value = '';
-  categorySelect.value = bookCategories[0]; // Сброс категории к первой
-
-  // Обновление отображения списка книг
-  const bookBase = myCollection.get<IBook[]>("books"); 
-  renderBooks(bookBase);
 });
 
-// Первоначальное отображение всех книг
-const bookBase = myCollection.get<IBook[]>("books"); //Исправить
-renderBooks(bookBase);
+// Инициализация приложения
+(() => {
+  createCategoryOptions();
+  changeTotal();
+  renderBooks(myCollection.get<IBook[]>('books') || []);
+  // Выбрать первую категорию по умолчанию
+  if (bookCategories.length > 0) {
+    selectedCategory = bookCategories[0];
+    filterBooksByCategory(bookCategories[0]);
+    highlightSelectedCategory(bookCategories[0]);
+  }
+})();

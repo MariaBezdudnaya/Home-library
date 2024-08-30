@@ -2,9 +2,11 @@
   "name": "library",
   "version": "1.0.0",
   "main": "index.js",
+  "homepage": "https://MariaBezdudnaya.github.io/Home-library",
   "scripts": {
     "start": "webpack serve",
-    "build": "webpack --config webpack.prod.js"
+    "build": "webpack",
+    "deploy": "npm run build && gh-pages -d dist"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +15,7 @@
   "devDependencies": {
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^7.1.2",
+    "gh-pages": "^6.1.1",
     "html-webpack-plugin": "^5.6.0",
     "mini-css-extract-plugin": "^2.9.0",
     "ts-loader": "^9.5.1",
