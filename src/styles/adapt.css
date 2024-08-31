@@ -1,0 +1,47 @@
+/* Media query for smaller screens */
+@media (max-width: 1050px) {
+    .book-item__buttons {
+      flex-direction: column; 
+      gap: 20px;
+    }
+  }
+  
+  @media (max-width: 900px) {
+    .content {
+      height: max-content;
+      flex-direction: column;
+      gap: 20px;
+    }
+  
+    h2 {
+      min-height: 30px;
+    }
+  
+    .create-edit, .category, .books {
+      width: 100%;
+    }
+  
+    .list-container {
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .book-item {
+      justify-content: space-between;
+    }
+  
+    .book-item-text {
+      width: 80%;
+    } 
+  }
+  
+  /* Media query for even smaller screens (e.g., mobile) */
+  @media (max-width: 480px) {
+    .book-item__buttons {
+      justify-content: space-between;
+    }
+  
+    .book-item-text {
+      width: 60%;
+    }
+  }

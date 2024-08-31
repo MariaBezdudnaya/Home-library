@@ -1,5 +1,6 @@
 import { IBook, BookCategory, bookCategories} from './types/index';
 import './styles/styles.css';
+import './styles/adapt.css';
 import  Collection  from "a-local-database";
 
 const myCollection = new Collection();

@@ -5,7 +5,7 @@
   "homepage": "https://MariaBezdudnaya.github.io/Home-library",
   "scripts": {
     "start": "webpack serve",
-    "build": "webpack",
+    "build": "webpack --config webpack.prod.ts",
     "deploy": "npm run build && gh-pages -d dist"
   },
   "keywords": [],
