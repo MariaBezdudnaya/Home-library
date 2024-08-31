@@ -364,7 +364,7 @@ html, body {
   font-weight: 400;
 }
 h2 {
-  font-size: 20px;
+  font-size: 1.25;
   font-weight: 700;
   min-height: 50px;
 }
@@ -373,7 +373,7 @@ h2 {
 .header__title {
   margin: 24px 0 18px; 
   text-align: center;   
-  font-size: 28px;
+  font-size: 1.75em;
   font-weight: 700;
 }
 
@@ -412,7 +412,7 @@ h2 {
   border: none;
   background: white;
   color: #4d4747;
-  font-size: 20px;
+  font-size: 1.25em;
   font-weight: 700;
   cursor: pointer;
   transition: 0.5s;
@@ -451,7 +451,7 @@ h2 {
   color: white;
   border-radius: 5px;
   border: none;
-  font-size: 16px;
+  font-size: 1em;
   cursor: pointer;
 }
 .categoryList li.selected {
@@ -467,6 +467,7 @@ h2 {
   padding: 10px;
   border: #6F6F6F 1px solid;
   overflow-y: scroll;
+  flex-grow: 1; /* Allow book list to take up available space */
 }
 
 /* Список книг */
@@ -484,7 +485,7 @@ h2 {
   background: white;
   color: #3b3737;
   outline: none;
-  font-size: 16px;
+  font-size: 1em;
 }
 
 /* Элемент добавленной книги */
@@ -500,7 +501,7 @@ h2 {
   padding: 10px 15px;
   margin-bottom: 10px;
   background-color: #6f6f6f79;
-  font-size: 16px;
+  font-size: 1em;
 }
 .book-item-text {
   flex-grow: 1;
@@ -536,13 +537,62 @@ h2 {
 
 /* footer */
 .footer__title {
-  font-size: 12px;
+  font-size: 0.75em;
+  margin-top: 20px;
 }
 
 #create-title.titleError {
-  background: #c4a8a8; /* Светло-красный фон для визуального выделения */
+  background: #c4a8a8;
 }
 
 #create-author.authorError {
-  background: #c4a8a8; /* Светло-красный фон для визуального выделения */
+  background: #c4a8a8; 
 }
+
+/* Media query for smaller screens */
+@media (max-width: 1050px) {
+    .book-item__buttons {
+      flex-direction: column; 
+      gap: 20px;
+    }
+  }
+  
+  @media (max-width: 900px) {
+    .content {
+      height: max-content;
+      flex-direction: column;
+      gap: 20px;
+    }
+  
+    h2 {
+      min-height: 30px;
+    }
+  
+    .create-edit, .category, .books {
+      width: 100%;
+    }
+  
+    .list-container {
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .book-item {
+      justify-content: space-between;
+    }
+  
+    .book-item-text {
+      width: 80%;
+    } 
+  }
+  
+  /* Media query for even smaller screens (e.g., mobile) */
+  @media (max-width: 480px) {
+    .book-item__buttons {
+      justify-content: space-between;
+    }
+  
+    .book-item-text {
+      width: 60%;
+    }
+  }
